@@ -1,0 +1,27 @@
+// POST: Comment/Edit/5        
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var commentToUpdate = db.Comments.Find(id);
+            if (TryUpdateModel(commentToUpdate, "",
+                new string[] { "Content","DatePosted", "PostID", "User_UserID" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+
+                    return new EmptyResult();
+                }
+                catch (DataException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            return new EmptyResult();      
+        }
