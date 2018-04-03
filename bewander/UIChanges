@@ -1,3 +1,12 @@
+/*
+These are the changes I made to streamline the user interface of the Bewander social networking website. 
+I added a couple of labels in User Story 1 in order to clarify what the user was viewing on the site. 
+For User Story 2, I added a navigation bar icon label ("Connect") which appears when the user hovers over the icon with their mouse. 
+This involved adding HTML and editing the CSS file to display the "Connect" label only when the user hovers over the icon. 
+It is hidden otherwise.
+*/
+
+
 //User Story 1
 <h2 style="text-align:center">Admin Panel</h2>
 <h4>Bewander Users</h4>
