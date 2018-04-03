@@ -1,0 +1,30 @@
+//User Story 1
+<h2 style="text-align:center">Admin Panel</h2>
+<h4>Bewander Users</h4>
+
+//User Story 2
+//This is in a separate style sheet from the HTML
+#connect.connectClass,
+#newNote.noteClass {
+    position: absolute;
+    background: #00aabb;
+    border-radius: .4em;
+    display: none;
+    font-size: medium;
+    font-family: 'Raleway', sans-serif !important;
+    padding: 10px 10px;
+    background: rgba(204, 204, 204, 0);
+}
+
+.fa-group:hover #connect.connectClass,
+.fa-exclamation:hover #newNote.noteClass {
+    display: block;
+    color: white;
+    opacity: initial;
+    /*margin-left: -45px; - for #newNote.noteClass - to align hover text under icon */
+}
+
+//HTML here
+ <a class="dropdown-toggle nav-dropdown-toggle" role="button"> @*The friend list icon is always on the nav bar- Corey D*@
+        <i class="fa fa-group navbar-icon"><span id="connect" class="connectClass"> Connect</span></i>
+    </a>
