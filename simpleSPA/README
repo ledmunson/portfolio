@@ -1,0 +1,1 @@
+This is a simple Single Page Application (SPA) that I created using Knockout.js and the Model, View, View-Model (MVVM) architectural pattern. This SPA allows the user to add new products to a database. The list of products in the database is displayed on the same page and is dynamically updated whenever a new product is added to the database. 
