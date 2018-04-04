@@ -1,0 +1,285 @@
+CREATE DATABASE LibraryMS;
+
+USE LibraryMS
+GO
+
+CREATE PROCEDURE dbo.usp_Populate_db_LibraryMS
+AS
+BEGIN
+
+	/******************************************************
+	 * If our tables already exist, drop and recreate them
+	 ******************************************************/
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES tbl_BOOK)
+		DROP TABLE  tbl_BOOK_AUTHORS, tbl_BOOK_LOANS, tbl_BOOK_COPIES, tbl_BORROWER, tbl_LIBRARY_BRANCH, tbl_BOOK, tbl_PUBLISHER;
+	/******************************************************
+	 * Build our database tables and define ther schema
+	 ******************************************************/
+
+	CREATE TABLE tbl_PUBLISHER (  
+		Name VARCHAR(50) PRIMARY KEY NOT NULL,
+		Address VARCHAR(50) NOT NULL,
+		Phone VARCHAR(50) NOT NULL
+	);
+	
+	CREATE TABLE tbl_BOOK (
+		BookId INT PRIMARY KEY NOT NULL IDENTITY (101,1),
+		Title VARCHAR(50) NOT NULL,
+		PublisherName VARCHAR(50) NOT NULL CONSTRAINT fk_BOOK_PublisherName FOREIGN KEY REFERENCES tbl_PUBLISHER(Name) ON UPDATE CASCADE ON DELETE CASCADE
+	);
+
+
+	CREATE TABLE tbl_BOOK_AUTHORS (  
+		BookId INT NOT NULL CONSTRAINT fk_BOOK_AUTHORS_BookId FOREIGN KEY REFERENCES tbl_BOOK(BookId) ON UPDATE CASCADE ON DELETE CASCADE,
+		AuthorName VARCHAR(50) NOT NULL
+	);
+	
+
+	CREATE TABLE tbl_LIBRARY_BRANCH (  
+		BranchId INT PRIMARY KEY NOT NULL IDENTITY (1,1),
+		BranchName VARCHAR(50) NOT NULL,
+		Address VARCHAR(100) NOT NULL
+	);
+
+
+	CREATE TABLE tbl_BORROWER (  
+		CardNo INT PRIMARY KEY NOT NULL IDENTITY (1000,1),
+		Name VARCHAR(100) NOT NULL,
+		Address VARCHAR(100) NOT NULL,
+		Phone VARCHAR(20) NOT NULL
+	);
+
+
+	CREATE TABLE tbl_BOOK_LOANS (  
+		BookId INT NOT NULL CONSTRAINT fk_BOOK_LOANS_BookId FOREIGN KEY REFERENCES tbl_BOOK(BookId) ON UPDATE CASCADE ON DELETE CASCADE,
+		BranchId INT NOT NULL CONSTRAINT fk_BOOK_LOANS_BranchId FOREIGN KEY REFERENCES tbl_LIBRARY_BRANCH(BranchId) ON UPDATE CASCADE ON DELETE CASCADE,
+		CardNo INT NOT NULL CONSTRAINT fk_CardNo FOREIGN KEY REFERENCES tbl_BORROWER(CardNo) ON UPDATE CASCADE ON DELETE CASCADE,
+		DateOut DATE NOT NULL,
+		DueDate DATE NOT NULL
+	);
+		
+
+	CREATE TABLE tbl_BOOK_COPIES (  
+		BookId INT NOT NULL CONSTRAINT fk_BOOK_COPIES_BookId FOREIGN KEY REFERENCES tbl_BOOK(BookId) ON UPDATE CASCADE ON DELETE CASCADE,
+		BranchId INT NOT NULL CONSTRAINT fk_BOOK_COPIES_BranchId FOREIGN KEY REFERENCES tbl_LIBRARY_BRANCH(BranchID) ON UPDATE CASCADE ON DELETE CASCADE,
+		No_Of_Copies INT NOT NULL
+	);
+
+
+/******************************************************
+	 * Now that the tables are built, we populate them
+	 ******************************************************/
+
+	 INSERT INTO tbl_PUBLISHER
+		(Name, Address, Phone)
+		VALUES
+		('BrickHouse Publishing Co.','2500 NW Main St, Queens, NY 12514','313-455-2166'),
+		('Raiden Publishing','300 E Boardwalk, Malibu, CA 90263','509-213-9020'),
+		('Third Eye Publishing Co.','Beverly Hills, CA 90210','905-123-4567'),
+		('Longitudinal Publishing Co.','56678 Yggdrasil Lane, Portland, OR 97204','503-668-2165'),
+		('Harry Pitts Publishing Co.','Sunchild Lane, Eugene, OR 97402','541-999-2171')
+	;
+
+	 INSERT INTO tbl_BOOK
+		(Title, PublisherName)
+		VALUES 
+		('The Lost Tribe','BrickHouse Publishing Co.'),
+		('Hucklberry Finn','BrickHouse Publishing Co.'),
+		('The Macroscope','BrickHouse Publishing Co.'),
+		('It','BrickHouse Publishing Co.'),
+		('The Tommyknockers','Raiden Publishing'),
+		('From a Buick 8','Raiden Publishing'),
+		('The Giver','Raiden Publishing'),
+		('Lord of the Flies','Raiden Publishing'),
+		('Harry Potter and the Chamber of Secrets','Third Eye Publishing Co.'),
+		('The Grapes of Wrath','Third Eye Publishing Co.'),
+		('East of Eden','Third Eye Publishing Co.'),
+		('The Great Gatsby','Third Eye Publishing Co.'),
+		('All The Light We Cannot See','Longitudinal Publishing Co.'),
+		('The Tower','Longitudinal Publishing Co.'),
+		('The Windup Girl','Longitudinal Publishing Co.'),
+		('Fight Club','Longitudinal Publishing Co.'),
+		('On The Road','Harry Pitts Publishing Co.'),
+		('Call Of The Wild','Harry Pitts Publishing Co.'),
+		('Whitefang','Harry Pitts Publishing Co.'),
+		('My Side Of The Mountain','Harry Pitts Publishing Co.'),
+		('The Alchemist','Harry Pitts Publishing Co.')
+	;
+
+	INSERT INTO tbl_LIBRARY_BRANCH
+		(BranchName,Address)
+		VALUES
+		('Sharpstown','1300 SW Bilbo Baggins Lane, The Shire, OR 97113'),
+		('Central','123 Central St, Centralia, WA 98531'),
+		('Brookstone','1558 Tiger Lane, Arcada, OR 97118'),
+		('Puckersburg','8008 Arial Court, Jacksonville, OR 96651')
+	;
+
+	INSERT INTO tbl_BORROWER
+		(Name,Address,Phone)
+		VALUES
+		('Andy Smith','555 SW 5th St, Grants Pass, OR 96651','503-212-4555'),
+		('Jocko Wilfred','6699 Prost Court, Freya, ID 50041','961-888-5023'),
+		('Mclovin','8009 Rhaegar Road, Redding, CA 88912','808-555-2158'),
+		('Derek Zoolander','203 Blacklung Road, Medford, OR 97200','503-878-9451'),
+		('Pos Eidon','1111 Starfish Lane, Boring, OR 97811','503-212-2112'),
+		('Hansel Ngretal','500 Breadcrumb Road, Hell, Michigan 50198','616-230-5000'),
+		('Dr. Sheldon Cooper','8191 Bazinga Court, Brighton, IN 50810','714-552-6477'),
+		('Clinton Barton','2020 Vision Street, Hawkeye, MI 66216','981-258-4691'),
+		('Roger Rogerson','506 SW Runningman Lane, Flanders, OR 87756','503-888-8989')
+	;
+
+
+	INSERT INTO tbl_BOOK_AUTHORS
+		(BookId,AuthorName)
+		VALUES
+		('101','Mark E. Davidson'),
+		('102','Mark Twain'),
+		('103','Piers Anthony'),
+		('104','Stephen King'),
+		('105','Stephen King'),
+		('106','Stephen King'),
+		('107','Lois Lowry'),
+		('108','William Golding'),
+		('109','J.K. Rowling'),
+		('110','John Steinbeck'),
+		('111','John Steinbeck'),
+		('112','F. Scott Fitzgerald'),
+		('113','Anthony Doerr'),
+		('114','Stephen King'),
+		('115','Paolo Bacigalupi'),
+		('116','Chuck Palahniuk'),
+		('117','Jack Kerouac'),
+		('118','Jack London'),
+		('119','Whitefang'),
+		('120','Jean Craighead George'),
+		('121','Paulo Coelho')
+	;
+
+	INSERT INTO tbl_BOOK_LOANS
+	(BookId,BranchId,CardNo,DateOut,DueDate)
+	VALUES
+	('101','1','1000','9/1/2017','9/15/2017'),
+	('102','1','1000','9/2/2017','9/16/2017'),
+	('101','1','1000','9/16/2017','9/30/2017'),
+	('103','1','1000','9/3/2017','9/17/2017'),
+	('104','2','1000','9/20/2017','10/4/2017'),
+	('105','2','1000','9/21/2017','10/5/2017'),
+	('106','2','1001','9/21/2017','10/5/2017'),
+	('107','2','1001','9/21/2017','10/5/2017'),
+	('108','3','1001','9/22/2017','10/6/2017'),
+	('109','1','1001','9/22/2017','10/6/2017'),
+	('110','2','1001','9/22/2017','10/6/2017'),
+	('111','1','1002','9/23/2017','10/7/2017'),
+	('112','1','1003','9/23/2017','10/7/2017'),
+	('113','4','1004','9/23/2017','10/7/2017'),
+	('114','4','1004','9/23/2017','10/7/2017'),
+	('115','4','1004','9/23/2017','10/7/2017'),
+	('116','4','1004','9/23/2017','10/7/2017'),
+	('117','4','1004','9/23/2017','10/7/2017'),
+	('118','4','1004','9/23/2017','10/7/2017'),
+	('119','4','1004','9/23/2017','10/7/2017'),
+	('120','4','1004','9/23/2017','10/7/2017'),
+	('121','4','1004','9/23/2017','10/7/2017'),
+	('101','4','1004','9/23/2017','10/7/2017'),
+	('102','1','1005','9/2/2017','9/16/2017'),
+	('103','1','1005','9/2/2017','9/16/2017'),
+	('104','4','1005','9/2/2017','9/16/2017'),
+	('105','4','1005','9/2/2017','9/16/2017'),
+	('106','3','1005','9/2/2017','9/16/2017'),
+	('107','3','1005','9/2/2017','9/16/2017'),
+	('108','3','1005','9/2/2017','9/16/2017'),
+	('109','3','1005','9/2/2017','9/16/2017'),
+	('110','3','1005','9/2/2017','9/16/2017'),
+	('111','3','1005','9/2/2017','9/16/2017'),
+	('112','3','1005','9/2/2017','9/16/2017'),
+	('113','3','1005','9/2/2017','9/16/2017'),
+	('114','3','1005','9/2/2017','9/16/2017'),
+	('115','3','1005','9/2/2017','9/16/2017'),
+	('116','3','1005','9/2/2017','9/16/2017'),
+	('117','3','1005','9/2/2017','9/16/2017'),
+	('118','3','1005','9/2/2017','9/16/2017'),
+	('102','4','1006','9/5/2017','9/19/2017'),
+	('103','4','1006','9/5/2017','9/19/2017'),
+	('104','4','1006','9/5/2017','9/19/2017'),
+	('105','4','1006','9/5/2017','9/19/2017'),
+	('106','4','1006','9/5/2017','9/19/2017'),
+	('107','4','1006','9/5/2017','9/19/2017'),
+	('108','4','1006','9/5/2017','9/19/2017'),
+	('109','4','1006','9/5/2017','9/19/2017'),
+	('110','4','1006','9/5/2017','9/19/2017'),
+	('111','4','1006','9/5/2017','9/19/2017'),
+	('112','4','1006','9/5/2017','9/19/2017'),
+	('113','4','1006','9/5/2017','9/19/2017'),
+	('114','4','1006','9/5/2017','9/19/2017'),
+	('115','4','1006','9/5/2017','9/19/2017'),
+	('116','4','1006','9/5/2017','9/19/2017'),
+	('117','4','1006','9/5/2017','9/19/2017'),
+	('118','4','1006','9/5/2017','9/19/2017'),
+	('119','4','1006','9/5/2017','9/19/2017'),
+	('120','4','1006','9/5/2017','9/19/2017'),
+	('121','4','1006','9/5/2017','9/19/2017'),
+	('121','2','1007','9/5/2017','9/19/2017'),
+	('101','4','1006','9/5/2017','9/19/2017'),
+	('102','4','1006','9/5/2017','9/19/2017'),
+	('103','4','1006','9/5/2017','9/19/2017'),
+	('104','4','1006','9/5/2017','9/19/2017'),
+	('105','4','1006','9/5/2017','9/19/2017'),
+	('106','4','1006','9/5/2017','9/19/2017'),
+	('107','4','1006','9/5/2017','9/19/2017'),
+	('108','4','1006','9/5/2017','9/19/2017'),
+	('109','4','1006','9/5/2017','9/19/2017'),
+	('110','4','1006','9/5/2017','9/19/2017'),
+	('111','4','1006','9/5/2017','9/19/2017')
+;
+
+
+	INSERT INTO tbl_BOOK_COPIES
+	(BookId,BranchId,No_Of_Copies)
+	VALUES
+	('101','1','3'),
+	('102','1','2'),
+	('103','1','2'),
+	('104','1','2'),
+	('105','1','3'),
+	('106','1','4'),
+	('107','1','3'),
+	('108','1','3'),
+	('109','1','2'),
+	('110','1','2'),
+	('111','1','2'),
+	('112','1','2'),
+	('104','2','2'),
+	('106','2','2'),
+	('107','2','6'),
+	('108','2','7'),
+	('110','2','4'),
+	('113','2','5'),
+	('111','2','2'),
+	('112','2','2'),
+	('115','2','2'),
+	('116','2','3'),
+	('118','3','3'),
+	('119','3','3'),
+	('120','3','3'),
+	('101','3','3'),
+	('103','3','3'),
+	('107','3','2'),
+	('110','3','2'),
+	('111','3','5'),
+	('112','3','5'),
+	('113','3','4'),
+	('114','3','7'),
+	('115','4','4'),
+	('101','4','2'),
+	('102','4','2'),
+	('103','4','2'),
+	('106','4','2'),
+	('110','4','3'),
+	('111','4','3'),
+	('113','4','2'),
+	('114','4','4'),
+	('115','4','4')
+;
+
+END	
