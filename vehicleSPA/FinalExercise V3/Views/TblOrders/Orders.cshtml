@@ -1,0 +1,121 @@
+﻿
+
+<div class='liveExample'>
+
+    <table width='100%'>
+        <thead>
+            <tr>
+                <th width='25%'>Category</th>
+                <th width='25%'>Product</th>
+                <th class='price' width='15%'>Price</th>
+                <th class='quantity' width='10%'>Quantity</th>
+                <th class='price' width='15%'>Subtotal</th>
+                <th width='10%'> </th>
+            </tr>
+        </thead>
+        <tbody data-bind='foreach: lines'>
+            <tr>
+                <td>
+                    <select data-bind='options: sampleProductCategories, optionsText: "name", optionsCaption: "Select...", value: category'> </select>
+                </td>
+                <td data-bind="with: category">
+                    <select data-bind='options: products, optionsText: "name", optionsCaption: "Select...", value: $parent.product'> </select>
+                </td>
+                <td class='price' data-bind='with: product'>
+                    <span data-bind='text: formatCurrency(price)'> </span>
+                </td>
+                <td class='quantity'>
+                    <input data-bind='visible: product, value: quantity, valueUpdate: "afterkeydown"' />
+                </td>
+                <td class='price'>
+                    <span data-bind='visible: product, text: formatCurrency(subtotal()), value: subtotal()'> </span>
+                </td>
+                <td>
+                    <a href='#' data-bind='click: $parent.removeLine'>Remove</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class='grandTotal'>
+        Total value: <span data-bind='text: formatCurrency(grandTotal())'> </span>
+    </p>
+    <button data-bind='click: addLine'>Add product</button>
+    <button data-bind='click: save'>Submit order</button>
+
+</div>
+
+<table id="products1" data-bind="visible: Products().length > 0">
+    <thead>
+        <tr>
+            <th style="display: none;">ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: Products">
+        <tr>
+            <td data-bind="visible:false , text: Id "></td>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: Category"></td>
+            <td data-bind="text: formatCurrency(Price)"></td>
+
+            <td>
+                <button data-bind="click: $root.edit">Edit</button>
+                <button data-bind="click: $root.delete">Delete</button>
+
+            </td>
+
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td>Total :</td>
+            <td></td>
+            <td data-bind="text: formatCurrency($root.Total())"></td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<div style="border-top: solid 2px #282828; width: 430px; height: 10px"> </div>
+
+@*
+<div data-bind="if: Product">
+    <div>
+        <h2>Update Product</h2>
+    </div>
+    <div>
+        <label for="productId" data-bind="visible: false">ID</label>
+        <label data-bind="text: Product().Id, visible: false"></label>
+
+    </div>
+    <div>
+        <label for="name">Name</label>
+        <input data-bind="value: Product().Name" type="text" title="Name" />
+    </div>
+
+    <div>
+        <label for="category">Category</label>
+        <input data-bind="value: Product().Category" type="text" title="Category" />
+    </div>
+
+    <div>
+        <label for="price">Price</label>
+        <input data-bind="value: Product().Price" type="text" title="Price" />
+
+    </div>
+    <br />
+    <div>
+        <button data-bind="click: $root.update">Update</button>
+        <button data-bind="click: $root.cancel">Cancel</button>
+
+    </div>
+</div>
+*@
