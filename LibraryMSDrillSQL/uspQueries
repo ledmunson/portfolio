@@ -1,0 +1,55 @@
+USE LibraryMS
+GO
+
+CREATE PROCEDURE dbo.usp_Query_db_LibraryMS
+AS
+BEGIN
+
+	SELECT a.No_Of_Copies, b.Title, a.BookId, a.BranchId
+	FROM tbl_BOOK_COPIES a
+	INNER JOIN tbl_BOOK b ON a.BookId = b.BookId
+	WHERE a.BranchId = '1' AND b.Title = 'The Lost Tribe'
+	;
+
+	SELECT a.No_Of_Copies, b.Title, a.BookId, a.BranchId
+	FROM tbl_BOOK_COPIES a
+	INNER JOIN tbl_BOOK b ON a.BookId = b.BookId
+	WHERE b.Title = 'The Lost Tribe'
+	;
+
+	SELECT b.Name, a.BookId, a.DateOut
+	FROM tbl_BORROWER b
+	LEFT JOIN tbl_BOOK_LOANS a ON a.CardNo = b.CardNo
+	WHERE DateOut is Null 
+	;
+
+	SELECT a.Title, c.Name, c.Address
+	FROM tbl_BOOK a
+	INNER JOIN tbl_BOOK_LOANS b ON b.BookId = a.BookId
+	INNER JOIN tbl_BORROWER c ON b.CardNo = b.CardNo
+	INNER JOIN tbl_LIBRARY_BRANCH e ON e.BranchId = b.BranchId
+	WHERE BranchName = 'Sharpstown' AND DueDate = GETDATE()
+	;
+
+	SELECT b.BranchName, COUNT(a.BookId) AS 'Total Books Loaned'
+	FROM tbl_BOOK_LOANS a
+	INNER JOIN tbl_LIBRARY_BRANCH b ON b.BranchId = a.BranchId
+	GROUP BY b.BranchName
+	; 
+
+	SELECT b.Name, b.Address, COUNT(a.BookID) AS 'Number of Books Checked Out'
+	FROM tbl_BOOK_LOANS a
+	INNER JOIN tbl_BORROWER b ON b.CardNo = a.CardNo
+	GROUP BY b.Name, b.Address
+	HAVING COUNT(a.BookID) >= 5
+	;
+
+	SELECT Title, No_Of_Copies
+	FROM tbl_BOOK_AUTHORS a
+	INNER JOIN tbl_BOOK b ON b.BookId = a.BookId
+	INNER JOIN tbl_BOOK_COPIES c ON b.BookId = c.BookId
+	INNER JOIN tbl_LIBRARY_BRANCH e ON e.BranchId = c.BranchId
+	WHERE AuthorName = 'Stephen King' AND BranchName = 'Central'
+	;
+
+END
