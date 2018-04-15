@@ -136,7 +136,7 @@ var Cart = function () {
             };
             */
 
-            // Trying something new to send multiple rows to server, it is causing an error
+            // Trying something new to send multiple rows to server
             var dataToSave = {
                 category: ko.observable(self.lines()[i].category().name),
                 product: ko.observable(self.lines()[i].product().name),
