@@ -1,0 +1,35 @@
+﻿@model List<FirstChallenge.Models.ComicBook>
+@{
+    ViewBag.Title = "Home";
+}
+
+<h2>My Comics</h2>
+@*
+<h3>@Html.ActionLink(Model.ElementAt(0).ComicTitle,"Comic41","Home")</h3>
+<h4>
+    #@Model.ElementAt(0).EpisodeNumber - @Model.ElementAt(0).EpisodeTitle
+</h4>
+<b>Starring:</b> @Model.ElementAt(0).Characters.ElementAt(0).Name
+
+<h3>@Html.ActionLink(Model.ElementAt(1).ComicTitle, "Comic13", "Home")</h3>
+<h4>
+    #@Model.ElementAt(1).EpisodeNumber - @Model.ElementAt(1).EpisodeTitle
+</h4>
+<b>Starring:</b> @Model.ElementAt(1).Characters.ElementAt(0).Name, @Model.ElementAt(1).Characters.ElementAt(1).Name
+
+<h3>@Html.ActionLink(Model.ElementAt(2).ComicTitle, "Comic17", "Home")</h3>
+<h4>
+    #@Model.ElementAt(2).EpisodeNumber - @Model.ElementAt(2).EpisodeTitle
+</h4>
+<b>Starring:</b> @Model.ElementAt(2).Characters.ElementAt(0).Name
+*@
+
+@foreach (var comic in Model)
+{
+    <h3>@Html.ActionLink(comic.ComicTitle,"Detail", new { id = comic.ComicBookId })</h3>
+    <h4>#@comic.EpisodeNumber - @comic.EpisodeTitle</h4>
+
+    var characters = comic.Characters.Select(p => p.Name).ToArray();
+    var charactersString = String.Join(", ", characters);
+    <p><strong>Starring: </strong> @charactersString </p>
+}

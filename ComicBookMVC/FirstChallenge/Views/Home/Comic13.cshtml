@@ -1,0 +1,13 @@
+﻿@model FirstChallenge.Models.ComicBook
+@{
+    ViewBag.Title = "Comic13";
+}
+
+<h2>Details About @Model.ComicTitle #@Model.EpisodeNumber</h2>
+
+<h3>Episode Title: @Model.EpisodeTitle</h3>
+
+<h4><b>Starring:</b> @Model.Characters.ElementAt(0).Name, @Model.Characters.ElementAt(1).Name</h4>
+
+<hr />
+<h4>@Html.ActionLink("Back to All Comics", "Index", "Home")</h4>
